@@ -1,0 +1,11 @@
+ID|NAME|PRODUCER|PRODUCT_LINE|PRICE
+1|iphone 1 ultra vip pro plus|huawei|vip|1.2E7
+2|iphone 2 ultra vip pro plus|huawei|vip|1.2E7
+3|iphone 3 ultra vip pro plus|huawei|vip|1.2E7
+4|iphone 4 ultra vip pro plus|huawei|vip|1.2E7
+5|iphone 5 ultra vip pro plus|huawei|vip|1.2E7
+6|iphone 6 ultra vip pro plus|huawei|vip|1.2E7
+7|iphone 7 ultra vip pro plus|huawei|vip|1.2E7
+8|iphone 8 ultra vip pro plus|huawei|vip|1.2E7
+9|iphone 9 ultra vip pro plus|huawei|vip|1.2E7
+10|iphone 10 ultra vip pro plus|huawei|vip|1.2E7
