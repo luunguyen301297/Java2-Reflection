@@ -4,11 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 11/13/2023, Monday
- **/
 public class Datasource {
   private static Connection conn;
 

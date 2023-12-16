@@ -7,11 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 12/14/2023, Thursday
- **/
 public class ProductRepository extends JpaRepositoryCloneImpl<Product> {
   public ProductRepository() {
     super(Product.class);

@@ -6,14 +6,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 12/11/2023, Monday
- **/
 public class HikariCPDataSource {
-  private static HikariConfig config = new HikariConfig();
-  private static HikariDataSource ds;
+  private static final HikariConfig config = new HikariConfig();
+  private static final HikariDataSource ds;
 
   static {
     config.setJdbcUrl("jdbc:mysql://localhost:3306/t2302");

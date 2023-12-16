@@ -2,11 +2,6 @@ package project.reflection.jpaRepo;
 
 import java.util.List;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 11/13/2023, Monday
- **/
 public interface JpaRepositoryClone<T> {
   T getById(String id);
 

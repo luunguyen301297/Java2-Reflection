@@ -9,11 +9,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 11/13/2023, Monday
- **/
 @Data
 @ConfigurationProperties
 public class DatabaseProperties {

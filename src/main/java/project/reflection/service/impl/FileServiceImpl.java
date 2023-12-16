@@ -3,11 +3,16 @@ package project.reflection.service.impl;
 import lombok.Data;
 import project.reflection.service.FileService;
 import project.reflection.test_product.FileRepository;
+import project.reflection.test_product.Product;
 import project.reflection.utility_class.AnnotationAndField;
 import project.reflection.utility_class.StringHeaderUtils;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 @Data
@@ -25,6 +30,8 @@ public abstract class FileServiceImpl<T> implements FileService<T> {
   }
 
   protected abstract T lineMapper(String header, String line);
+
+  protected abstract String formatObjToFileLIne(T t);
 
   @Override
   public List<T> readFile(String path) {
@@ -51,14 +58,14 @@ public abstract class FileServiceImpl<T> implements FileService<T> {
     List<T> allObjectInFile = readFile(path);
 
     int count = 0;
-    for (T obj : allObjectInFile) {
+    for (T t : allObjectInFile) {
       Field[] fields = clazz.getDeclaredFields();
       for (Field f : fields) {
         f.setAccessible(true);
         try {
-          Object fValue = f.get(obj);
-          if (fValue != null && fValue.toString().contains(searchKeyword)) {
-            searchResultList.add(obj);
+          Object fValue = f.get(t);
+          if (fValue != null && fValue.toString().toLowerCase().contains(searchKeyword.toLowerCase())) {
+            searchResultList.add(t);
             count++;
             break;
           }
@@ -71,57 +78,133 @@ public abstract class FileServiceImpl<T> implements FileService<T> {
   }
 
   @Override
-  public boolean add(T t, String path) {
-    FileWriter myWriter;
+  public boolean addToFile(T t, String path) {
     try {
-      myWriter = new FileWriter(path, true);
-      myWriter.write(t.toString());
-      myWriter.close();
-      return true;
-    } catch (IOException e) {
-      System.err.println(e.getMessage() + " / An error occurred !");
+      Field field = t.getClass().getDeclaredField(fieldName.get(0));
+      field.setAccessible(true);
+      Object newValue = field.get(t);
+
+      List<T> allObjectsInFile = readFile(path);
+      for (T obj : allObjectsInFile) {
+        Field objField = obj.getClass().getDeclaredField(fieldName.get(0));
+        objField.setAccessible(true);
+        Object value = objField.get(obj);
+        if (value.equals(newValue)) {
+          return false;
+        }
+      }
+
+      try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+        writer.write(formatObjToFileLIne(t));
+        writer.newLine();
+        return true;
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
-    return false;
   }
 
   @Override
   public boolean updateById(String id, T t, String path) {
-    return false;
+    List<String> lines = new ArrayList<>();
+    try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        if (line.contains(id)) {
+          lines.add(formatObjToFileLIne(t));
+        } else {
+          lines.add(line);
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("An error occurred while reading the file");
+    }
+    safeWriteToFile(lines, path);
+    return true;
   }
 
   @Override
   public boolean deleteById(String id, String path) {
-    return false;
-  }
-
-  private boolean createNewFile() {
-    String path = "";
-    File newFile;
-    boolean checkExists = false;
-    try {
-      newFile = new File(path);
-      if (!newFile.exists()) {
-        newFile.createNewFile();
-        System.out.println("File was created with path : " + path);
-        checkExists = true;
-      } else {
-        System.err.println("File already exists !");
+    List<String> lines = new ArrayList<>();
+    try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        if (!line.contains(id)) {
+          lines.add(line);
+        }
       }
     } catch (IOException e) {
-      System.err.println(e.getMessage() + " / An error occurred !");
+      throw new RuntimeException("An error occurred while reading the file");
     }
-    return checkExists;
+    safeWriteToFile(lines, path);
+    return true;
+  }
+
+  @Override
+  public boolean createNewFile(String path) {
+    Path newFilePath = Paths.get(path);
+    if (!Files.exists(newFilePath)) {
+      try {
+        Files.createFile(newFilePath);
+        System.out.println("File was created with path : " + path);
+        return true;
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      System.err.println("File already exists !");
+      return false;
+    }
+  }
+
+  private void safeWriteToFile(List<String> lines, String path) {
+    Path tempFilePath = Paths.get(path + ".tmp");
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFilePath.toFile()))) {
+      for (String line : lines) {
+        writer.write(line);
+        writer.newLine();
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("An error occurred while writing to the temporary file");
+    }
+
+    // Xóa file gốc
+    Path originalFilePath = Paths.get(path);
+    try {
+      Files.deleteIfExists(originalFilePath);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to delete the original file");
+    }
+
+    // Đổi tên tệp .tmp thành tên của file gốc
+    try {
+      Files.move(tempFilePath, originalFilePath, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to rename the temporary file to the original file name.");
+    }
   }
 
   public static void main(String[] args) {
     FileRepository repo = new FileRepository();
     String path = "C:/Users/ad/IdeaProjects/Java2_Reflection/etc/product_table.txt";
-    System.out.println(repo.getHeader());
+
+    Product p = Product.builder()
+      .id(10)
+      .name("test update")
+      .producer("test update")
+      .productLine("test update")
+      .price(10000000.0f)
+      .build();
 
     long startTime = System.currentTimeMillis();
 
 //    repo.readFile(path).forEach(System.out::println);
-    System.out.println(repo.search("iphone 3", path));
+//    System.out.println(repo.addToFile(p, path));
+//    System.out.println(repo.updateById("10", p, path));
+//    System.out.println(repo.deleteById("10", path));
+    System.out.println(repo.search("Iphone 5", path));
 
     System.out.println("time : " + (System.currentTimeMillis() - startTime));
   }

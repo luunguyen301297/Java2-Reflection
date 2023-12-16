@@ -1,13 +1,7 @@
 package project.reflection.utility_class;
 
 import java.util.List;
-import java.util.StringJoiner;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 12/15/2023, Friday
- **/
 public class StringHeaderUtils {
   public static String headerBuilder(List<String> tList) {
     StringBuilder headerBuilder = new StringBuilder();

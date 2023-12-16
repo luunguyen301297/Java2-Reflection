@@ -9,14 +9,8 @@ import project.reflection.annotations.Table;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 12/15/2023, Friday
- **/
 @Data
 @NoArgsConstructor
 public class AnnotationAndField {

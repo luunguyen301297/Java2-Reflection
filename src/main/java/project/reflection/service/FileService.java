@@ -12,9 +12,11 @@ public interface FileService<T> {
 
   List<T> search(String searchKeyword, String path);
 
-  boolean add(T t, String path);
+  boolean addToFile(T t, String path);
 
   boolean updateById(String id, T t, String path);
 
   boolean deleteById(String id, String path);
+
+  boolean createNewFile(String path);
 }

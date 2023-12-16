@@ -29,7 +29,7 @@ public enum StringSql {
   OFFSET("OFFSET");
   public final String val;
 
-  private StringSql(String val) {
+  StringSql(String val) {
     this.val = val;
   }
 }
