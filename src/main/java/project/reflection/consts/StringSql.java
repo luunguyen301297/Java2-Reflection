@@ -1,10 +1,5 @@
 package project.reflection.consts;
 
-/**
- * @author : ad
- * @mailto : luunguyen301297@gmail.com
- * @created : 11/13/2023, Monday
- **/
 public enum StringSql {
   SELECT_CLAUSE("SELECT * FROM"),
   INSERT("INSERT INTO"),
@@ -22,6 +17,8 @@ public enum StringSql {
   NOT_EQUAL_TO("<>"),
   IN("IN"),
   OR("OR"),
+  AND("AND"),
+  BETWEEN("BETWEEN"),
   SPACE(" "),
   OPEN_PARENTHESIS("("),
   CLOSE_PARENTHESIS(")"),

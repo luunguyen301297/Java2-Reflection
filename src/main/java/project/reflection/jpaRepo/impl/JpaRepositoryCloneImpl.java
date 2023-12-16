@@ -15,15 +15,15 @@ public abstract class JpaRepositoryCloneImpl<T> implements JpaRepositoryClone<T>
   private final String idColumnName;
   private final List<String> columnName;
   private final List<String> columnFieldName;
-  AnnotationAndField getAnnotationAndField;
+  AnnotationAndField annotationAndField;
 
   public JpaRepositoryCloneImpl(Class<?> clazz) {
     this.clazz = clazz;
-    this.getAnnotationAndField = new AnnotationAndField(clazz);
-    this.tableName = getAnnotationAndField.getTableName();
-    this.idColumnName = getAnnotationAndField.getIdColumnName();
-    this.columnName = getAnnotationAndField.getColumnName();
-    this.columnFieldName = getAnnotationAndField.getColumnFieldName();
+    this.annotationAndField = new AnnotationAndField(clazz);
+    this.tableName = annotationAndField.getTableName();
+    this.idColumnName = annotationAndField.getIdColumnName();
+    this.columnName = annotationAndField.getColumnName();
+    this.columnFieldName = annotationAndField.getColumnFieldName();
   }
 
   protected abstract List<T> rowMapper(ResultSet resultSet);

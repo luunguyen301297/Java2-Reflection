@@ -14,13 +14,13 @@ import java.util.*;
 public abstract class FileServiceImpl<T> implements FileService<T> {
   private Class<?> clazz;
   private List<String> fieldName;
-  AnnotationAndField getAnnotationAndField;
+  AnnotationAndField annotationAndField;
   private String header;
 
   public FileServiceImpl(Class<?> clazz) {
     this.clazz = clazz;
-    this.getAnnotationAndField = new AnnotationAndField(clazz);
-    this.fieldName = getAnnotationAndField.getAllFieldName();
+    this.annotationAndField = new AnnotationAndField(clazz);
+    this.fieldName = annotationAndField.getAllFieldName();
     this.header = StringHeaderUtils.headerBuilder(getFieldName());
   }
 
