@@ -2,8 +2,6 @@ package project.reflection.jpaRepo.impl;
 
 import project.config.properties.Datasource;
 import project.reflection.consts.StringSql;
-import project.reflection.test_product.Product;
-import project.reflection.test_product.ProductRepository;
 import project.reflection.utility_class.AnnotationAndField;
 import project.reflection.jpaRepo.JpaRepositoryClone;
 
