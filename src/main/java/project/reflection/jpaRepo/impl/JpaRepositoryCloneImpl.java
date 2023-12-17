@@ -2,6 +2,8 @@ package project.reflection.jpaRepo.impl;
 
 import project.config.properties.Datasource;
 import project.reflection.consts.StringSql;
+import project.reflection.test_product.Product;
+import project.reflection.test_product.ProductRepository;
 import project.reflection.utility_class.AnnotationAndField;
 import project.reflection.jpaRepo.JpaRepositoryClone;
 
@@ -15,11 +17,10 @@ public abstract class JpaRepositoryCloneImpl<T> implements JpaRepositoryClone<T>
   private final String idColumnName;
   private final List<String> columnName;
   private final List<String> columnFieldName;
-  AnnotationAndField annotationAndField;
 
   public JpaRepositoryCloneImpl(Class<?> clazz) {
+    AnnotationAndField annotationAndField = new AnnotationAndField(clazz);
     this.clazz = clazz;
-    this.annotationAndField = new AnnotationAndField(clazz);
     this.tableName = annotationAndField.getTableName();
     this.idColumnName = annotationAndField.getIdColumnName();
     this.columnName = annotationAndField.getColumnName();

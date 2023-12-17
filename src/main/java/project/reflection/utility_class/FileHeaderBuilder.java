@@ -2,7 +2,7 @@ package project.reflection.utility_class;
 
 import java.util.List;
 
-public class StringHeaderUtils {
+public class FileHeaderBuilder {
   public static String headerBuilder(List<String> tList) {
     StringBuilder headerBuilder = new StringBuilder();
     for (String t : tList) {

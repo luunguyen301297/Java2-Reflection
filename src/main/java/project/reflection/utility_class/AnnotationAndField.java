@@ -1,7 +1,6 @@
 package project.reflection.utility_class;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import project.reflection.annotations.Column;
 import project.reflection.annotations.Id;
@@ -11,15 +10,14 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
 public class AnnotationAndField {
-  private Class<?> clazz;
+  private final Class<?> clazz;
   private String tableName;
   private String idColumnName;
-  private List<String> columnName;
-  private List<String> columnFieldName;
-  private List<String> allFieldName;
+  private final List<String> columnName;
+  private final List<String> columnFieldName;
+  private final List<String> allFieldName;
 
   public AnnotationAndField(Class<?> clazz) {
     this.clazz = clazz;
@@ -32,7 +30,7 @@ public class AnnotationAndField {
     if (tableAnnotation != null) {
       tableName = tableAnnotation.tableNAme();
     } else {
-      System.err.println("Class not match entity class");
+      throw new RuntimeException("Class not match entity class");
     }
 
     Field[] fields = clazz.getDeclaredFields();
@@ -42,7 +40,7 @@ public class AnnotationAndField {
         this.idColumnName = idAnnotation.columName();
       }
       if (StringUtils.isEmpty(this.idColumnName)) {
-        System.err.println("Err");
+        throw new RuntimeException("Id column is empty");
       }
 
       Column columnAnnotation = field.getAnnotation(Column.class);

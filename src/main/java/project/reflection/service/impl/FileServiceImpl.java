@@ -1,11 +1,11 @@
 package project.reflection.service.impl;
 
-import lombok.Data;
+import lombok.Getter;
 import project.reflection.service.FileService;
 import project.reflection.test_product.FileRepository;
 import project.reflection.test_product.Product;
 import project.reflection.utility_class.AnnotationAndField;
-import project.reflection.utility_class.StringHeaderUtils;
+import project.reflection.utility_class.FileHeaderBuilder;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -15,18 +15,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 
-@Data
+@Getter
 public abstract class FileServiceImpl<T> implements FileService<T> {
-  private Class<?> clazz;
-  private List<String> fieldName;
-  AnnotationAndField annotationAndField;
-  private String header;
+  private final Class<?> clazz;
+  private final List<String> fieldName;
+  private final String header;
 
   public FileServiceImpl(Class<?> clazz) {
+    AnnotationAndField annotationAndField = new AnnotationAndField(clazz);
     this.clazz = clazz;
-    this.annotationAndField = new AnnotationAndField(clazz);
     this.fieldName = annotationAndField.getAllFieldName();
-    this.header = StringHeaderUtils.headerBuilder(getFieldName());
+    this.header = FileHeaderBuilder.headerBuilder(getFieldName());
   }
 
   protected abstract T lineMapper(String header, String line);
@@ -159,7 +158,7 @@ public abstract class FileServiceImpl<T> implements FileService<T> {
     }
   }
 
-  private void safeWriteToFile(List<String> lines, String path) {
+  public void safeWriteToFile(List<String> lines, String path) {
     Path tempFilePath = Paths.get(path + ".tmp");
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFilePath.toFile()))) {
       for (String line : lines) {
